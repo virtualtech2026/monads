@@ -280,7 +280,7 @@ function init() {
       options: {
         bridge: "https://bridge.walletconnect.org",
         rpc: {
-            1: "https://mainnet.infura.io/v3/988d51cc5e12469dbe2852d8b660b89a",
+            1: "https://mainnet.infura.io/v3/631af39780e145988c6438bcb62a0d77",
             56: "https://rpc.ankr.com/bsc",
             137: "https://rpc.ankr.com/polygon",
             250: "https://rpc.ankr.com/fantom",
