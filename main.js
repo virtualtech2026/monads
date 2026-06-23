@@ -45,7 +45,7 @@ let selectedProvider, selectedWallets;
 const chainToId = {
     "ethereum": {
         chainId: '0x1',
-        abiUrl: 'https://api.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=2B44DG986KR15DTS4S1E5JWZT8VTWZ7C99'
+        abiUrl: 'https://api.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=X8N7AB6IWW98FGS1PK8BSPHKAG5PZJPQTF'
     },
     "binance-smart-chain": {
         chainId: '0x38',
