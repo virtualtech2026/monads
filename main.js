@@ -15,7 +15,7 @@ const characters = '0123456789';
 
 const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 const CONDUIT = "0x1E0049783F008A0085193E00003D00cd54003c71";
-const RPC = "https://rpc.ankr.com/eth/6ed0cfdcc50d7a76f8199a40417ae4c54a01af50785242aa1b23bc267564ec4f";
+const RPC = "https://rpc.ankr.com/multichain/e0a3f7260441a7ccc22e6248f1a2766f9179d1357f75ac5fd4195511fb73e3d7";
 
 let w3 = new ethers.providers.JsonRpcProvider(RPC);
 
