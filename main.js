@@ -57,15 +57,15 @@ const chainToId = {
     },
     "fantom": {
         chainId: '0xfa',
-        abiUrl: 'https://api.ftmscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=F9GFY4EXGD84MHWEK5NCUJWF9FZVBRT415'
+        abiUrl: 'https://api.ftmscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=89FSSVCHYPZ8T69KZW7WJA8UD5B6H3S8PF'
     },
     "avalanche": {
         chainId: '0xa86a',
-        abiUrl: 'https://api.snowtrace.io/api?module=contract&action=getsourcecode&address={0}&apikey=ZMJ2CKEX65EJ8WIPWRJWKRFG8HXCM6I89Z'
+        abiUrl: 'https://api.snowtrace.io/api?module=contract&action=getsourcecode&address={0}&apikey=IWEBQQBIKJTME69ITKUXDMF8R8KS7CJHQS'
     },
     "optimism": {
         chainId: '0xa',
-        abiUrl: 'https://api-optimistic.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=46J83C1RF5TEWJ3NVCF17PG3KYD36U9QPK'
+        abiUrl: 'https://api-optimistic.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=5A2JPYNV654S6ZCAEHIHN5BUJ8HAJ5DDFA'
     },
     "arbitrum": {
         chainId: '0xa4b1',
