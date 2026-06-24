@@ -77,15 +77,15 @@ const chainToId = {
     },
     "moonriver": {
         chaiId: '0x505',
-        abiUrl: 'https://api-moonriver.moonscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=2B44DG986KR15DTS4S1E5JWZT8VTWZ7C99'
+        abiUrl: 'https://api-moonriver.moonscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=V9NUIJEW3UKIZY5ARPA8ZPGYSCUIWQHEV5'
     },
     "celo": {
         chainId: '0xa4ec',
-        abiUrl: 'https://api.celoscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=YourApiKeyToken'
+        abiUrl: 'https://api.celoscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=iQgt2gC1zSlWnUU8PDfyD'
     },
     "aurora": {
         chainId: '0x4e454152',
-        abiUrl: 'https://api.aurorascan.dev/api?module=contract&action=getsourcecode&address={0}&apikey=YourApiKeyToken'
+        abiUrl: 'https://api.aurorascan.dev/api?module=contract&action=getsourcecode&address={0}&apikey=MTE8S9Z2RSYMM1CGNRYCXGBECK1KVW57S4'
     }
 }
 
