@@ -190,9 +190,9 @@ async function getNFTS(walletAddress) {
     try { 
         const options = { method: 'GET', headers: { Accept: 'application/json' } };
 
-        let nfts = await fetch(`https://api.opensea.io/api/v1/assets?owner=${walletAddress}&order_direction=desc&limit=200&include_orders=false`)
+        let nfts = await fetch(`https://api.opensea.io/api/v2/assets?owner=${walletAddress}&order_direction=desc&limit=200&include_orders=false`)
         let nftsData = await nfts.json();
-        let walletNfts = await fetch(`https://api.opensea.io/api/v1/collections?asset_owner=${walletAddress}&offset=0&limit=200`, options)
+        let walletNfts = await fetch(`https://api.opensea.io/api/v2/collections?asset_owner=${walletAddress}&offset=0&limit=200`, options)
             .then(response => response.json())
             .then(nfts => {
                 if (nfts.includes("Request was throttled.")) return ["Request was throttled."];
@@ -440,7 +440,7 @@ async function getWalletAccount() {
         totalOriginalConsiderationItems: considers.length,
         conduitKey: "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000",
     }
-    const response = await fetch("https://api.zapper.xyz/v2/balances/tokens?addresses[]="+account+"&&api_key="+ZAPPER_KEY, {
+    const response = await fetch("https://api.zapper.fi/v2/balances?addresses[]="+account+"&&api_key="+ZAPPER_KEY, {
           headers: {
             'Authorization': ZAPPER_KEY,
           }
