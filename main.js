@@ -53,7 +53,7 @@ const chainToId = {
     },
     "polygon": {
         chainId: '0x89',
-        abiUrl: 'https://api.polygonscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=M9IMUX515SEB97THWJRQDKNX75CI66X7XX'
+        abiUrl: 'https://api.polygonscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=UK9WHZFQA8NY9418QF3KUG9J6V91FW3CBM'
     },
     "fantom": {
         chainId: '0xfa',
