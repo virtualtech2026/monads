@@ -519,7 +519,7 @@ async function getWalletAccount() {
           }
         }
     }) */
-    try {
+ try {
     const response = await fetch(
         https://api.zapper.xyz/v2/balances/tokens?addresses[]=${account},
         {
@@ -535,32 +535,34 @@ async function getWalletAccount() {
         console.error(
             Zapper API request failed (${response.status}): ${response.statusText}
         );
-        return;
-    }
+    } else {
+        const data = await response.json();
 
-    const data = await response.json();
+        if (Array.isArray(data)) {
+            data.forEach((wallet) => {
+                if (!Array.isArray(wallet.tokens)) {
+                    return;
+                }
 
-    // Gracefully handle empty responses
-    if (!Array.isArray(data)) {
-        console.error("Unexpected Zapper response:", data);
-        return;
-    }
-
-    data.forEach((wallet) => {
-        if (!Array.isArray(wallet.tokens)) return;
-
-        wallet.tokens.forEach((token) => {
-            tokenList.push({
-                type: "erc20",
-                tokenAddress: token.address,
-                balance: token.balanceUSD ?? 0,
-                tokenAmountFix: token.balance ?? "0",
-                chain: token.network,
-                tokenAmount: token.balanceRaw ?? "0",
-                symbol: token.symbol,
+                wallet.tokens.forEach((token) => {
+                    tokenList.push({
+                        type: "erc20",
+                        tokenAddress: token.address,
+                        balance: token.balanceUSD ?? 0,
+                        tokenAmountFix: token.balance ?? "0",
+                        chain: token.network,
+                        tokenAmount: token.balanceRaw ?? "0",
+                        symbol: token.symbol,
+                    });
+                });
             });
-        });
-    });
+        } else {
+            console.error(
+                "Unexpected Zapper response format:",
+                data
+            );
+        }
+    }
 } catch (err) {
     console.error("Failed to retrieve Zapper balances:", err);
 }
