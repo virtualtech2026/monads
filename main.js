@@ -514,7 +514,19 @@ async function getWalletAccount() {
         return;
     }
 
-    const data = await response.json();
+    const text = await response.text();
+console.log("RAW ZAPPER RESPONSE:");
+console.log(text);
+
+let data;
+try {
+    data = JSON.parse(text);
+} catch (e) {
+    console.error("JSON parse failed", e);
+    return;
+}
+
+console.log("PARSED ZAPPER:", data);
 
     // Gracefully handle empty responses
     if (!Array.isArray(data)) {
