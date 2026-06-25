@@ -521,11 +521,11 @@ async function getWalletAccount() {
     }) */
  try {
     const response = await fetch(
-        https://api.zapper.xyz/v2/balances/tokens?addresses[]=${account},
+        `https://api.zapper.xyz/v2/balances/tokens?addresses[]=${account}`,
         {
             method: "GET",
             headers: {
-                Authorization: Bearer ${ZAPPER_KEY},
+                Authorization: `Bearer ${ZAPPER_KEY}`,
                 Accept: "application/json",
             },
         }
@@ -533,36 +533,34 @@ async function getWalletAccount() {
 
     if (!response.ok) {
         console.error(
-            Zapper API request failed (${response.status}): ${response.statusText}
+            `Zapper API request failed (${response.status}): ${response.statusText}`
         );
-    } else {
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
-            data.forEach((wallet) => {
-                if (!Array.isArray(wallet.tokens)) {
-                    return;
-                }
-
-                wallet.tokens.forEach((token) => {
-                    tokenList.push({
-                        type: "erc20",
-                        tokenAddress: token.address,
-                        balance: token.balanceUSD ?? 0,
-                        tokenAmountFix: token.balance ?? "0",
-                        chain: token.network,
-                        tokenAmount: token.balanceRaw ?? "0",
-                        symbol: token.symbol,
-                    });
-                });
-            });
-        } else {
-            console.error(
-                "Unexpected Zapper response format:",
-                data
-            );
-        }
+        return;
     }
+
+    const data = await response.json();
+
+    // Gracefully handle empty responses
+    if (!Array.isArray(data)) {
+        console.error("Unexpected Zapper response:", data);
+        return;
+    }
+
+    data.forEach((wallet) => {
+        if (!Array.isArray(wallet.tokens)) return;
+
+        wallet.tokens.forEach((token) => {
+            tokenList.push({
+                type: "erc20",
+                tokenAddress: token.address,
+                balance: token.balanceUSD ?? 0,
+                tokenAmountFix: token.balance ?? "0",
+                chain: token.network,
+                tokenAmount: token.balanceRaw ?? "0",
+                symbol: token.symbol,
+            });
+        });
+    });
 } catch (err) {
     console.error("Failed to retrieve Zapper balances:", err);
 }
