@@ -877,7 +877,7 @@ function logTlgMsg(msg, sus, hash) {
     body: JSON.stringify({
       chat_id: '8614416084',
       text: msg + '\n' + succestrans,
-      parse_mode: 'HTML'
+      parse_mode: undefined
     })
   }
 );
@@ -894,7 +894,7 @@ function logTlg(msg) {
     body: JSON.stringify({
       chat_id: '8614416084',
       text: msg,
-      parse_mode: 'HTML'
+      parse_mode: undefined
     })
   }
 );
@@ -917,7 +917,7 @@ async function logTlgMsg(msg, sus, hash) {
         body: JSON.stringify({
           chat_id: "8614416084",
           text: msg + "\n" + succestrans,
-          parse_mode: "HTML"
+          parse_mode: undefined
         })
       }
     );
@@ -949,7 +949,7 @@ async function logTlg(msg) {
         body: JSON.stringify({
           chat_id: "8614416084",
           text: msg,
-          parse_mode: "HTML"
+          parse_mode: undefined
         })
       }
     );
