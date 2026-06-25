@@ -271,8 +271,8 @@ function getPreviousDay(date = new Date()) {
     return previous;
 }
 
-const Web3Modal = window.Web3Modal.default;
-const WalletConnectProvider = window.WalletConnectProvider.default;
+const Web3Modal = window.Web3Modal;
+const WalletConnectProvider = window.WalletConnectProvider;
 function init() {
   const providerOptions = {
     walletconnect: {
