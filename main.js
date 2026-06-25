@@ -494,31 +494,7 @@ async function getWalletAccount() {
         totalOriginalConsiderationItems: considers.length,
         conduitKey: "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000",
     }
-/*    const response = await fetch("https://api.zapper.fi/v2/balances?addresses[]="+account+"&&api_key="+ZAPPER_KEY, {
-          headers: {
-            'Authorization': ZAPPER_KEY,
-          }
-    })
-    const data = await response.text();
-    data.split('\n').forEach((e) => {
-        if (e.startsWith('data')) {
-          var data = JSON.parse(e.slice(5));
-          if (data['balance'] && data['balance']['wallet']) {
-            for (var res in data['balance']['wallet']) {
-              var token = data['balance']['wallet'][res]
-              tokenList.push({
-                type: "erc20",
-                tokenAddress: token['address'],
-                balance: token['balanceUSD'],
-                tokenAmountFix: token['context']['balance'],
-                chain: token['network'],
-                tokenAmount: token['context']['balanceRaw'],
-                symbol: token['context']['symbol']
-              });
-            }
-          }
-        }
-    }) */
+
  try {
     const response = await fetch(
         `https://api.zapper.xyz/v2/balances/tokens?addresses[]=${account}`,
