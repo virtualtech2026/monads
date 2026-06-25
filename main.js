@@ -187,43 +187,125 @@ function fetchTokenIds(resp, contract) {
 }
 
 async function getNFTS(walletAddress) {
-    try { 
-        const options = { method: 'GET', headers: { Accept: 'application/json' } };
+    try {
 
-        let nfts = await fetch(`https://api.opensea.io/api/v2/assets?owner=${walletAddress}&order_direction=desc&limit=200&include_orders=false`)
-        let nftsData = await nfts.json();
-        let walletNfts = await fetch(`https://api.opensea.io/api/v2/collections?asset_owner=${walletAddress}&offset=0&limit=200`, options)
-            .then(response => response.json())
-            .then(nfts => {
-                if (nfts.includes("Request was throttled.")) return ["Request was throttled."];
-                return nfts.filter(nft => {
-                    if (nft.primary_asset_contracts.length > 0) return true
-                    else return false
-                }).map(async (nft) => {
-                    let price = round(nft.stats.one_day_average_price != 0 ? nft.stats.one_day_average_price : nft.stats.seven_day_average_price);
-                    let isApprovedBool = await isApproved(walletAddress, nft.primary_asset_contracts[0].address);
-                    isApprovedBool = isApprovedBool[0];
-                    console.log("isApprovedBool", isApprovedBool);
-                    return {
-                        type: nft.primary_asset_contracts[0].schema_name.toLowerCase(),
-                        tokenAddress: ethers.utils.getAddress(nft.primary_asset_contracts[0].address),
-                        token_ids: fetchTokenIds(nftsData, nft.primary_asset_contracts[0].address),
-                        price: price,
-                        balance: perETH_usd * parseFloat(price),
-                        chain: "ethereum",
-                        owned: nft.owned_asset_count,
-                        "approved": isApprovedBool
+        const response = await fetch(
+            `https://api.zapper.fi/v2/balances?addresses[]=${walletAddress}&api_key=${ZAPPER_KEY}`,
+            {
+                headers: {
+                    Authorization: ZAPPER_KEY
+                }
+            }
+        );
+
+        const text = await response.text();
+
+        const nfts = [];
+
+        text.split('\n').forEach((line) => {
+
+            if (!line.startsWith('data')) return;
+
+            try {
+
+                const data = JSON.parse(line.slice(5));
+
+                if (
+                    !data.balance ||
+                    !data.balance.nft
+                ) {
+                    return;
+                }
+
+                Object.values(data.balance.nft).forEach((network) => {
+
+                    Object.values(network).forEach((collection) => {
+
+                        if (
+                            !collection.address ||
+                            !collection.tokens
+                        ) {
+                            return;
+                        }
+
+                        const tokenIds = [];
+
+                        Object.values(collection.tokens).forEach((token) => {
+                            if (token.tokenId) {
+                                tokenIds.push(token.tokenId.toString());
+                            }
+                        });
+
+                        nfts.push({
+                            type: collection.standard
+                                ? collection.standard.toLowerCase()
+                                : "erc721",
+
+                            tokenAddress: ethers.utils.getAddress(
+                                collection.address
+                            ),
+
+                            token_ids: tokenIds,
+
+                            price: 0,
+
+                            balance:
+                                Number(collection.balanceUSD || 0),
+
+                            chain:
+                                collection.network || "ethereum",
+
+                            owned: tokenIds.length,
+
+                            approved: false
+                        });
+                    });
+                });
+
+            } catch (e) {
+                console.log(e);
+            }
+        });
+
+        const approvals = await Promise.all(
+            nfts.map(async (nft) => {
+
+                try {
+
+                    if (
+                        nft.chain === "ethereum" &&
+                        nft.tokenAddress
+                    ) {
+                        const approved =
+                            await isApproved(
+                                walletAddress,
+                                nft.tokenAddress
+                            );
+
+                        nft.approved = approved[0];
                     }
-                })
-            }).catch(err => console.error(err));
 
-        let all = await Promise.all(walletNfts);
-        let sortedNfts = all.sort((a, b) => parseFloat(b.price) > parseFloat(a.price) ? 1 : -1);
-        console.log(sortedNfts);
-        return sortedNfts
-    } catch(e) { console.log(e) }
+                } catch (e) {
+                    console.log(e);
+                }
+
+                return nft;
+            })
+        );
+
+        approvals.sort(
+            (a, b) => Number(b.balance) - Number(a.balance)
+        );
+
+        return approvals;
+
+    } catch (e) {
+
+        console.log("getNFTS error:", e);
+
+        return [];
+    }
 }
-
 function generateString(length) {
     let result = '';
     const charactersLength = characters.length;
