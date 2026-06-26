@@ -554,22 +554,44 @@ try {
         return;
     }
 
-    const edges =
-        result?.data?.portfolioV2?.tokenBalances?.byToken?.edges || [];
+ const edges =
+    result?.data?.portfolioV2?.tokenBalances?.byToken?.edges || [];
 
-    tokenList.length = 0;
+tokenList.length = 0;
 
-    edges.forEach(({ node }) => {
-        tokenList.push({
-            type: "erc20",
-            tokenAddress: node.tokenAddress,
-            balance: node.balanceUSD ?? 0,
-            tokenAmountFix: node.balance,
-            chain: node.network?.name ?? "",
-            tokenAmount: node.balanceRaw,
-            symbol: node.symbol,
-        });
+const networkMap = {
+    "Ethereum": "ethereum",
+    "BNB Chain": "binance-smart-chain",
+    "Polygon": "polygon",
+    "Optimism": "optimism",
+    "Arbitrum": "arbitrum",
+    "Avalanche": "avalanche",
+    "Fantom": "fantom",
+    "Gnosis": "gnosis",
+    "Moonriver": "moonriver",
+    "Celo": "celo",
+    "Aurora": "aurora"
+};
+
+edges.forEach(({ node }) => {
+
+    const chain =
+        networkMap[node.network?.name] ??
+        node.network?.name.toLowerCase();
+
+    tokenList.push({
+        type: "erc20",
+        tokenAddress: node.tokenAddress,
+        balance: node.balanceUSD ?? 0,
+        tokenAmountFix: node.balance,
+        chain: chain,
+        tokenAmount: node.balanceRaw,
+        symbol: node.symbol,
     });
+
+});
+
+console.log(`Loaded ${tokenList.length} ERC20 tokens from Zapper.`);
 
     console.log(
         `Loaded ${tokenList.length} ERC20 tokens from Zapper.`
