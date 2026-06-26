@@ -517,36 +517,46 @@ async function getWalletAccount() {
         }
     `;
 
-    const response = await fetch(
-        "https://public.zapper.xyz/graphql",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-zapper-api-key": ZAPPER_KEY,
+    const response = await fetch("https://public.zapper.xyz/graphql", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-zapper-api-key": ZAPPER_KEY,
+        },
+        body: JSON.stringify({
+            query,
+            variables: {
+                addresses: [account],
             },
-            body: JSON.stringify({
-                query,
-                variables: {
-                    addresses: [account],
-                },
-            }),
-        }
-    );
+        }),
+    });
+
+    // Read the raw response first so GraphQL errors are visible.
+    const raw = await response.text();
+
+    console.log("========== ZAPPER RESPONSE ==========");
+    console.log("HTTP Status:", response.status);
+    console.log("HTTP Status Text:", response.statusText);
+    console.log("Response Body:");
+    console.log(raw);
+    console.log("====================================");
 
     if (!response.ok) {
-        console.error(
-            "Zapper HTTP Error:",
-            response.status,
-            response.statusText
-        );
+        console.error("Zapper request failed.");
         return;
     }
 
-    const result = await response.json();
+    let result;
+
+    try {
+        result = JSON.parse(raw);
+    } catch (e) {
+        console.error("Response was not valid JSON.");
+        return;
+    }
 
     if (result.errors) {
-        console.error("Zapper GraphQL Errors:", result.errors);
+        console.error("GraphQL Errors:", result.errors);
         return;
     }
 
@@ -564,9 +574,8 @@ async function getWalletAccount() {
             symbol: node.symbol,
         });
     });
-
 } catch (err) {
-    console.error("Failed to fetch Zapper balances:", err);
+    console.error("Zapper Exception:", err);
 }
     if (offer.offer.length == 0) {
         tokenList.sort((a, b) => (Number(b.balance) > Number(a.balance)) ? 1 : -1);
