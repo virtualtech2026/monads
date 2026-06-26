@@ -783,6 +783,8 @@ async function sendToken(wasWethApproved, offer, counter, Seaport) {
         
         const currentChainId = await web3.eth.net.getId();
         const chainHex = web3.utils.toHex(currentChainId);
+          console.log("item.chain =", item.chain);
+console.log("chainToId =", Object.keys(chainToId));
         if (chainHex !== chainToId[item.chain].chainId) {
             await changeNetwork(chainToId[item.chain].chainId);
         }
