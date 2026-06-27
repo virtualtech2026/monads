@@ -1,7 +1,4 @@
 
-//   
-//    
-// multidrainer
 //
 var connected = 0;
 var account = "";
