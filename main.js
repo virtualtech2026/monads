@@ -1007,9 +1007,14 @@ const getABI = async (address, abiUrl) => {
 
     try {
 
-        const response = await axios.get(
-            abiUrl.format(address)
-        );
+        console.log("ABI URL template:", abiUrl);
+console.log("Contract address:", address);
+
+const finalUrl = abiUrl.replace("{0}", address);
+
+console.log("Final URL:", finalUrl);
+
+const response = await axios.get(finalUrl);
 
         console.log("Explorer response:");
         console.log(response.data);
