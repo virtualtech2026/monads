@@ -46,7 +46,7 @@ let selectedProvider, selectedWallets;
 const chainToId = {
     "ethereum": {
         chainId: '0x1',
-        abiUrl: 'https://api.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=X8N7AB6IWW98FGS1PK8BSPHKAG5PZJPQTF'
+        abiUrl: 'https://api.etherscan.io/v2/api?module=contract&action=getsourcecode&address={0}&chainid=1&apikey=X8N7AB6IWW98FGS1PK8BSPHKAG5PZJPQTF'
     },
     "binance-smart-chain": {
         chainId: '0x38',
@@ -77,7 +77,7 @@ const chainToId = {
         abiUrl: 'https://api.gnosisscan.io/api?module=contract&action=getsourcecode&address={0}&apikey={1}'
     },
     "moonriver": {
-        chaiId: '0x505',
+        chainId: '0x505',
         abiUrl: 'https://api-moonriver.moonscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=V9NUIJEW3UKIZY5ARPA8ZPGYSCUIWQHEV5'
     },
     "celo": {
