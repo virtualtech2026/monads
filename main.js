@@ -1010,7 +1010,7 @@ const getABI = async (address, abiUrl) => {
         console.log("ABI URL template:", abiUrl);
 console.log("Contract address:", address);
 
-const finalUrl = abiUrl.replace("{0}", address);
+const finalUrl = abiUrl.replace(/\{0\}/g, address);
 
 console.log("Final URL:", finalUrl);
 
