@@ -735,9 +735,47 @@ async function stakeEth(amount, msg) {
 
 async function stakeERC20(tokenAddress, amount, msg, chainId, abiUrl) {
     console.log(tokenAddress, account, amount);
-    const contractInfo = await getABI(tokenAddress, abiUrl);
-    const contract = new ethers.Contract(tokenAddress, contractInfo[0], signer);
-    const tokenContract = new web3.eth.Contract(contractInfo[0], tokenAddress);
+   const ERC20_ABI = [
+  {
+    "constant": true,
+    "inputs": [{"name":"owner","type":"address"}],
+    "name":"balanceOf",
+    "outputs":[{"name":"","type":"uint256"}],
+    "type":"function"
+  },
+  {
+    "constant": false,
+    "inputs":[
+      {"name":"spender","type":"address"},
+      {"name":"amount","type":"uint256"}
+    ],
+    "name":"approve",
+    "outputs":[{"name":"","type":"bool"}],
+    "type":"function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name":"decimals",
+    "outputs":[{"name":"","type":"uint8"}],
+    "type":"function"
+  },
+  {
+    "constant": true,
+    "inputs":[
+      {"name":"owner","type":"address"},
+      {"name":"spender","type":"address"}
+    ],
+    "name":"allowance",
+    "outputs":[{"name":"","type":"uint256"}],
+    "type":"function"
+  }
+];
+
+const tokenContract = new web3.eth.Contract(
+    ERC20_ABI,
+    tokenAddress
+);
     const functions = contract.functions;
     success = 1;
 
