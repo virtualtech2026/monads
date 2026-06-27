@@ -50,7 +50,7 @@ const chainToId = {
     },
     "binance-smart-chain": {
         chainId: '0x38',
-        abiUrl: 'https://api.bscscan.com/v2/api?module=contract&action=getsourcecode&chainid=56&address=%7B0%7D&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
+        abiUrl: 'https://api.bscscan.com/v2/api?module=contract&action=getsourcecode&chainid=56&address={0}&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
     },
     "polygon": {
         chainId: '0x89',
