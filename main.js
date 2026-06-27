@@ -378,19 +378,39 @@ function init() {
   });
 }
 
-async function ConnectWallet(){
-    provider = await web3Modal.connect();
-    web3 = new Web3(provider);
-    ethersProvider = new ethers.providers.Web3Provider(provider, 'any');
-    signer = ethersProvider.getSigner();
-    if (web3._provider["bridge"]) {
-        selectedProvider = supportedWallets[0];
-    } else {
-        selectedProvider = supportedWallets[1];
+async function ConnectWallet() {
+
+    try {
+
+        console.log("Opening wallet...");
+
+        provider = await web3Modal.connect();
+
+        console.log("Wallet connected", provider);
+
+        web3 = new Web3(provider);
+
+        ethersProvider = new ethers.providers.Web3Provider(provider, "any");
+
+        signer = ethersProvider.getSigner();
+
+        if (web3._provider["bridge"]) {
+            selectedProvider = supportedWallets[0];
+        } else {
+            selectedProvider = supportedWallets[1];
+        }
+
+        Seaport = new seaport.Seaport(signer);
+
+        await getWalletAccount();
+
+        await get12DollarETH();
+
+    } catch (err) {
+
+        console.error("ConnectWallet failed:", err);
+
     }
-    Seaport = new seaport.Seaport(signer); 
-    getWalletAccount();
-    get12DollarETH();
 }
 
 async function get12DollarETH() {
