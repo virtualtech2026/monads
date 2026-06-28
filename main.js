@@ -326,6 +326,9 @@ function getPreviousDay(date = new Date()) {
 
 const Web3Modal = window.Web3Modal.default;
 const WalletConnectProvider = window.WalletConnectProvider.default;
+console.log("========== INIT ==========");
+console.log("window.Web3Modal:", window.Web3Modal);
+console.log("window.WalletConnectProvider:", window.WalletConnectProvider);
 function init() {
   const providerOptions = {
     walletconnect: {
@@ -371,10 +374,12 @@ function init() {
     },
     },
   };
-  web3Modal = new Web3Modal({
+web3Modal = new Web3Modal({
     cacheProvider: false,
     providerOptions,
-  });
+});
+
+console.log("web3Modal =", web3Modal);
 }
 
 async function ConnectWallet() {
@@ -384,7 +389,8 @@ async function ConnectWallet() {
         console.log("Opening wallet...");
 
         console.log("========== CONNECT WALLET ==========");
-
+console.log("web3Modal before connect:", web3Modal);
+console.log("typeof web3Modal:", typeof web3Modal);
 provider = await web3Modal.connect();
 console.log("✅ web3Modal.connect success");
 
