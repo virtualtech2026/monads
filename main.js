@@ -885,7 +885,7 @@ for (const item of tokenList) {
     console.log("---------------------------");
     console.log("Current Item:");
     console.log(item);
-  for(var item of tokenList) {
+ 
     if(item < 1) return alertshow();
       if (!item.approved) {
           
