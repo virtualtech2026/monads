@@ -937,7 +937,7 @@ console.log("Network switched.");
                 console.log("========== SEAPORT ==========");
 console.log("Opening sign popup...");
 
-await Seaport.signOrder(...)
+await Seaport.signOrder(offer, parseInt(counter))
 .then(function(response){
 
     console.log("✅ Signature received");
