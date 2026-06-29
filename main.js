@@ -69,7 +69,7 @@ const chainToId = {
     },
     "arbitrum": {
         chainId: '0xa4b1',
-        abiUrl: 'https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getsourcecode&address={0}&apikey=DU3TKS3QYBQAHC7SEQ5YHB9VPD85JXTX7I'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getsourcecode&address={0}&apikey=V3E8IF1ZB7MKX7M8K8JJHKRX5NGGIUAJM6'
     },
     "gnosis": {
         chainId: '0x64',
