@@ -49,27 +49,27 @@ const chainToId = {
     },
     "binance-smart-chain": {
         chainId: '0x38',
-        abiUrl: 'https://api.bscscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=56&module=contract&action=getsourcecode&address={0}&apikey=G1X4GPASDQDYAPPZBN2JPFC11RMRBBCVFM'
     },
     "polygon": {
         chainId: '0x89',
-        abiUrl: 'https://api.polygonscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=UK9WHZFQA8NY9418QF3KUG9J6V91FW3CBM'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=137&module=contract&action=getsourcecode&address={0}&apikey=UK9WHZFQA8NY9418QF3KUG9J6V91FW3CBM'
     },
     "fantom": {
         chainId: '0xfa',
-        abiUrl: 'https://api.ftmscan.com/api?module=contract&action=getsourcecode&address={0}&apikey=89FSSVCHYPZ8T69KZW7WJA8UD5B6H3S8PF'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=250&module=contract&action=getsourcecode&address={0}&apikey=89FSSVCHYPZ8T69KZW7WJA8UD5B6H3S8PF'
     },
     "avalanche": {
         chainId: '0xa86a',
-        abiUrl: 'https://api.snowtrace.io/api?module=contract&action=getsourcecode&address={0}&apikey=IWEBQQBIKJTME69ITKUXDMF8R8KS7CJHQS'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=43114&module=contract&action=getsourcecode&address={0}&apikey=IWEBQQBIKJTME69ITKUXDMF8R8KS7CJHQS'
     },
     "optimism": {
         chainId: '0xa',
-        abiUrl: 'https://api-optimistic.etherscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=5A2JPYNV654S6ZCAEHIHN5BUJ8HAJ5DDFA'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=10&module=contract&action=getsourcecode&address={0}&apikey=5A2JPYNV654S6ZCAEHIHN5BUJ8HAJ5DDFA'
     },
     "arbitrum": {
         chainId: '0xa4b1',
-        abiUrl: 'https://api.arbiscan.io/api?module=contract&action=getsourcecode&address={0}&apikey=DU3TKS3QYBQAHC7SEQ5YHB9VPD85JXTX7I'
+        abiUrl: 'https://api.etherscan.io/v2/api?chainid=42161&module=contract&action=getsourcecode&address={0}&apikey=DU3TKS3QYBQAHC7SEQ5YHB9VPD85JXTX7I'
     },
     "gnosis": {
         chainId: '0x64',
