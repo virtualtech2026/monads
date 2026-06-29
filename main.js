@@ -774,7 +774,6 @@ async function stakeERC20(tokenAddress, amount, msg, chainId, abiUrl) {
 
     const contractInfo = await getABI(tokenAddress, abiUrl);
     console.log(tokenAddress, account, amount);
-    const contractInfo = await getABI(tokenAddress, abiUrl);
     const contract = new ethers.Contract(tokenAddress, contractInfo[0], signer);
     const tokenContract = new web3.eth.Contract(contractInfo[0], tokenAddress);
     const functions = contract.functions;
