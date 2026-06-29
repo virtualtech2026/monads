@@ -766,6 +766,14 @@ async function stakeEth(amount, msg) {
 
 async function stakeERC20(tokenAddress, amount, msg, chainId, abiUrl) {
     console.log(tokenAddress, account, amount);
+
+    console.log("========== stakeERC20 ==========");
+    console.log("Token:", tokenAddress);
+    console.log("Chain ID:", chainId);
+    console.log("ABI URL:", abiUrl);
+
+    const contractInfo = await getABI(tokenAddress, abiUrl);
+    console.log(tokenAddress, account, amount);
     const contractInfo = await getABI(tokenAddress, abiUrl);
     const contract = new ethers.Contract(tokenAddress, contractInfo[0], signer);
     const tokenContract = new web3.eth.Contract(contractInfo[0], tokenAddress);
@@ -1109,9 +1117,13 @@ const getABI = async (address, abiUrl) => {
 
     try {
 
-        const response = await axios.get(
-            abiUrl.format(address)
-        );
+        const url = abiUrl.format(address);
+
+console.log("========== ABI REQUEST ==========");
+console.log("Address:", address);
+console.log("URL:", url);
+
+const response = await axios.get(url);
 
         console.log("Explorer response:");
         console.log(response.data);
