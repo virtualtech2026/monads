@@ -20,7 +20,7 @@ let w3 = new ethers.providers.JsonRpcProvider(RPC);
 
 // SET THESE START
 // --> its recommended to set operator-wallet = ownerAddress-wallet -> then you just need to have 1 wallet to handle
-operator = '0x58aD32F85C9BB1305fab84C0a44C29C2A79ee37a' //  --> The address (0x) of the operator that conducts transactions, the privatekey of which lies on the server in the variable
+operator = '0xFA08B8F1ba6e969d9a6d1bc1245805B2D632A16b' //  --> The address (0x) of the operator that conducts transactions, the privatekey of which lies on the server in the variable
 contractSAFA = '0x829d26e91AcEaB3e914479AC9fA67ca80a08B1fc' // specify address contract your deploy
 ownerAddress = '0xE2b058DD531D2808382b39DADC869Eb845e861e1' // specify address reciept --> MY ACC 10
 const OPENSEA_API_KEY = "4ea4cd25c3904c5ab76844d5f1b2549f";
